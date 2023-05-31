@@ -27,8 +27,10 @@ class UserService(private val userRepository: UserRepository) {
 
     @Transactional
     fun updateUser(user: User, updateUserRequest: UpdateUserRequest): User {
-        var newUser = assignAttributes(user,updateUserRequest)
+        var newUser = assignAttributes(user, updateUserRequest)
         newUser = this.userRepository.save(newUser)
         return newUser;
     }
+
+    fun getAllUsers(): List<User> = this.userRepository.findAll()
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   Button,
@@ -14,26 +14,41 @@ import {
 import { User } from '../classes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { UserContext } from '../context/user.context';
+import { getUsers } from '../services';
 
 export const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
   const { user, setLoggedUser, token } = useContext(UserContext);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const users: User[] = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Smith' },
-    { id: 3, name: 'Bob Johnson' },
-  ];
-
+  useEffect(() => {
+    loadUsers();
+  }, []);
   const handleCreateAccount = () => {
     console.log('Create account button clicked!');
   };
 
+  async function loadUsers() {
+    setLoading(true);
+    setError(null);
+    try {
+      // throw new Error("Super Errpr")
+      setUsers(await getUsers());
+    } catch (e) {
+      console.log(e);
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const renderItem = ({ item, index }: { item: any; index: number }): React.ReactElement => (
     <>
       <ListItem
-        title={item.name}
-        description={item.name}
+        title={item.firstName + ' ' + item.lastName}
+        description={item.email}
         accessoryLeft={(props): any => (
           <MaterialCommunityIcons name='account' size={18} color={theme['color-info-400']} />
         )}
@@ -74,6 +89,11 @@ export const HomeScreen = ({ navigation }) => {
         </View>
 
         <Button onPress={handleCreateAccount}>Create Account</Button>
+        {error && (
+          <View style={styles.errorMsg}>
+            <Text>{error}</Text>
+          </View>
+        )}
       </Layout>
     </SafeAreaView>
   );
@@ -81,7 +101,8 @@ export const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 192,
+    maxHeight: 190,
+    overflow:"scroll",
     backgroundColor: 'transparent',
   },
   beforeElement: {
@@ -101,6 +122,19 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'white',
     content: '',
+  },
+  errorMsg: {
+    position: 'absolute',
+    left: 0,
+    bottom: 60,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '102%',
+    height: 50,
+    backgroundColor: '#e57373',
+    padding: 8,
+    color: 'red',
   },
   orLabel: {
     textAlign: 'center',

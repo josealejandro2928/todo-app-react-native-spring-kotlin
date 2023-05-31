@@ -30,4 +30,7 @@ class UserController(private val userService: UserService) {
         return ResponseEntity(user, HttpStatus.OK)
     }
 
+    @GetMapping
+    fun getAllUsers() = this.userService.getAllUsers()
+
 }
