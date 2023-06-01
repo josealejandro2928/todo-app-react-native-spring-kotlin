@@ -10,13 +10,19 @@ const TodoList = ({ navigation }) => {
   const [taskList, setTaskList] = useState([]);
   const { token } = useContext(UserContext);
   const [error, setError] = useState('');
+
   useEffect(() => {
-    if (token) {
-      fetchTodos();
-    } else {
-      setTaskList([]);
-    }
-  }, [token]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (token) {
+        fetchTodos();
+      } else {
+        setTaskList([]);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation]);
 
   const fetchTodos = async () => {
     try {
