@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 
 @RestController
-@RequestMapping("v1/todo")
+@RequestMapping("v1/todos")
 class TodoController(private val todoService: TodoService) {
     @PostMapping()
     fun createTodo(

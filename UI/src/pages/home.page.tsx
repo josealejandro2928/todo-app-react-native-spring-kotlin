@@ -27,14 +27,13 @@ export const HomeScreen = ({ navigation }) => {
     loadUsers();
   }, []);
   const handleCreateAccount = () => {
-    console.log('Create account button clicked!');
+    navigation.navigate("CREATE USER")
   };
 
   async function loadUsers() {
     setLoading(true);
     setError(null);
     try {
-      // throw new Error("Super Errpr")
       setUsers(await getUsers());
     } catch (e) {
       console.log(e);
@@ -101,7 +100,7 @@ export const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 190,
+    maxHeight: 250,
     overflow:"scroll",
     backgroundColor: 'transparent',
   },

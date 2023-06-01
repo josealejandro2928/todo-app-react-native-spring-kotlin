@@ -20,7 +20,7 @@ export const useUser = () => {
 
   useEffect(() => {
     console.log('user: ', user);
-    setToken(token);
+    setToken(user?.email);
   }, [user]);
 
   const setLoggedUser = async (user: User | null) => {
